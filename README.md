@@ -113,8 +113,8 @@ All analyses contributing to this paper will be organized through this repositor
    6. Pull data onto your volume. For example, if you are pulling the h5ad files for your analysis please copy the full path as follows. `aws s3 cp --recursive s3://ucsf-genomics-prod-yelab-icc/analysis_outputs/h5ad_files/ /icc/analysis_outputs/h5ad_files/`. This should then be referenced in the code.
 
    7. Once you've completed a logical section of your analysis, such as QTL calling, heritability analysis, Figure 2b, etc.
-        1. Update the remote github repo with a [pull request](###updating-the-remote-with-pull-requests) or a
-           [merge](###updating-the-remote-with-merge).
+        1. Update the remote github repo with a [pull request](#updating-the-remote-with-pull-requests) or a
+           [merge](#updating-the-remote-with-merge).
         2. Copy all analysis outputs to s3, `aws s3 sync <analysis dir> s3://ucsf-genomics-prod-yelab-icc/production_analyses/<analysis dir>`.
            Please update the directory structure to include the location of your analysis outputs.
            **NOTE: all EBS volumes are deleted every two weeks, so it is VERY important to frequently commit your code and sync your analysis outputs to s3/git**
