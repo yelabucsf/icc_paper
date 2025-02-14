@@ -193,13 +193,14 @@ of files git will ignore when adding files in bulk. Details can be found
 - Click "Create pull request"
 
 3. **PR Components**
+
 Required:
 - Title: Clear, concise description of changes. For example, "Add scripts for Sup Fig 1"
 - Description: Detailed explanation including what changes were made. You can
   add `@user` to mention and notify someone.
 
 Optional:
-- Reviewers: Optionally assign team members if you want them to review your code changes
+- Reviewers: Assign team members if you want them to review your code changes
 - Assignees: Usually yourself
 - Labels: Categories for the PR (e.g., bug, enhancement), helpful with filtering
 - Projects: not very useful
