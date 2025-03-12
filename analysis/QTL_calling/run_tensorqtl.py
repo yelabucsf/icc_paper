@@ -106,7 +106,7 @@ if(options.chrom == 'all'):
                     options.name, covariates_df=covariates_df,window=int(options.window), maf_threshold=float(options.maf))
 
 
-    # pairs_df = pd.read_parquet(f'{options.name}.cis_qtl_pairs.{options.chrom}.parquet')
+    pairs_df = pd.read_parquet(f'{options.name}.cis_qtl_pairs.{options.chrom}.parquet')
 
     # all genes
     # cis_df = cis.map_cis(genotype_df, variant_df, phenotype_df, phenotype_pos_df, covariates_df=covariates_df)
@@ -141,7 +141,7 @@ else:
                     options.name, covariates_df=covariates_df,window=int(options.window), maf_threshold=float(options.maf))
 
 
-    # pairs_df = pd.read_parquet(f'{options.name}.cis_qtl_pairs.{options.chrom}.parquet')
+    pairs_df = pd.read_parquet(f'{options.name}.cis_qtl_pairs.{options.chrom}.parquet')
 
     # all genes
     # cis_df = cis.map_cis(genotype_df, variant_df, phenotype_df, phenotype_pos_df, covariates_df=covariates_df)
