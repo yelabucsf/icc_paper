@@ -13,7 +13,7 @@ from scipy.io import mmread
 import os
 #import pickle as pkl
 
-#CMD: python make_basic_counts.py -R /data/jan2025/MultiVI_posttraining_RNA_Celltypist_VaryingClusteringResolution_manual_annots.h5ad -O /data/processed/pseudobulk/rna/ -S best_sample L1_manual 
+#CMD: python make_basic_counts.py -R /data/march2025/MultiVI_posttraining_RNA_Celltypist_VaryingClusteringResolution_manual_annots.h5ad -O /data/processed/pseudobulk/rna/ -S best_sample L1_manual 
 
 parser = argparse.ArgumentParser(description="This pseudobulk script accepts ATAC-seq, RNA-seq and/or protein sequencing data")
 parser.add_argument("-A", "--atac", type=str, required=False, help='ATAC-seq ArchR project folder')
@@ -37,7 +37,7 @@ print(str("out directory: "+str(args.pseudobulk_outdir)))
 if args.rna != None:
     print(str("rna file: "+str(args.rna)))
     #print(str("rna donor column: "+str(args.donor_col)))
-    print(str("columns atac: "+str(args.covars_rna)))
+    print(str("columns rna: "+str(args.covars_rna)))
     covars=args.covars_rna
     exp_all=sc.read_h5ad(args.rna)
     print(exp_all.obs.columns)
@@ -46,6 +46,8 @@ if args.rna != None:
     exp_all=0
     get_tupes_exp = exp.obs[covars][~exp.obs[covars].duplicated()].itertuples
     df_exp = pd.DataFrame(np.nan,index=pd.MultiIndex.from_tuples([i[1:] for i in get_tupes_exp()], names=covars),columns=exp.var_names)
+    df_cellcount = pd.DataFrame(columns=list(set(exp.obs[covars[1]])),index=list(set(exp.obs[covars[0]])))
+    #df_cell_counts=pd.DataFrame(np.nan,index=pd.MultiIndex.from_tuples([i[1:] for i in get_tupes_exp()], names=covars),columns=exp.var_names)
     print('RNA matrix set up complete')
 
     for bc, indv, cluster in list(get_tupes_exp()):
@@ -55,19 +57,31 @@ if args.rna != None:
         num_cells_exp = view_exp.shape[0]
         arr_exp = view_exp.X.sum(0).A.flatten()
         df_exp.loc[(indv, cluster)] = arr_exp
+        df_cellcount.loc[(indv,cluster)]=num_cells_exp
+        # test code
+        print(df_exp)
+        print(view_exp)
+        print(num_cells_exp)
+        #df_cell_counts.loc[(indv, cluster)] =num_cells_exp
+
         #df_exp.loc[(indv, cluster)] = np.log1p(arr_exp/num_cells_exp)
     print("done creating RNA pseudobulk matrix")
     print(df_exp)
 
     #save dataframes of metrics
     donor_counts=df_exp.sum(axis=1).unstack(level=0).T
+    donor_cell_counts=df_exp.count(axis=1).unstack(level=0).T
+    print(donor_cell_counts.head())
     #"cell_group"
     gene_counts=(df_exp.groupby(by=[args.rna_cell]).sum(0)).T
     gene_counts.index.name = 'genes'
 
+    df_cellcount=df_cellcount.fillna(0)
+
 
     #save outputs
     donor_counts.to_csv(str(args.pseudobulk_outdir)+"/donor_counts_exp.txt",sep="\t")
+    df_cellcount.to_csv(str(args.pseudobulk_outdir)+"/donor_cell_counts_exp.txt",sep="\t")
     gene_counts.to_csv(str(args.pseudobulk_outdir)+"/gene_counts_exp.txt",sep="\t")
 
     cell_types = np.unique(df_exp.index.get_level_values(1))
