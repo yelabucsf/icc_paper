@@ -273,6 +273,14 @@ plot.data.cleaned$SAS_Admixture = ifelse(plot.data.cleaned$IID %in% sas.pop.inds
 fwrite(plot.data.cleaned, file = "ICC_Genotype_Ancestry_Assignment.csv")
 
 
+### Export list of individuals for ancestry-specific genotype and QTL analysis
+for(this.anc in c("EUR", "AFR", "EAS", "AMR")){
+  this.individuals = plot.data.cleaned$IID[which(plot.data.cleaned$Assignment == this.anc)]
+  write.table(this.individuals, file = paste0("ICC_", this.anc, "_individuals.txt"),
+              row.names = F, col.names = F, sep = "\n", quote = F)
+}
+
+
 
 ######################################
 ## plot final assignment pie chart
