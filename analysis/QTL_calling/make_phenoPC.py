@@ -45,4 +45,7 @@ def exprPC(file,pc_n,name):
     #var_exp.index=e.columns
     #print(var_exp)
 
+print('npc: '+str(args.n_pc))
+print('pheno: '+str(args.pheno))
+print('outfile: '+str(args.outfile))
 exprPC(args.pheno,args.n_pc,args.outfile)
