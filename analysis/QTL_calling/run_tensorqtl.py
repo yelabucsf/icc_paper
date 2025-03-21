@@ -3,6 +3,7 @@ import torch
 import tensorqtl
 from tensorqtl import pgen, cis, trans, post
 import rfunc
+import os
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"torch: {torch.__version__} (CUDA {torch.version.cuda}), device: {device}")
 print(f"pandas {pd.__version__}")
@@ -85,6 +86,7 @@ for col in covariates_df.columns:
 
 print(covariates_df)
 
+#genotypes can be large and this step can take a while
 # PLINK reader for genotypes
 pgr = pgen.PgenReader(options.geno)
 genotype_df = pgr.load_genotypes()
@@ -106,7 +108,20 @@ if(options.chrom == 'all'):
                     options.name, covariates_df=covariates_df,window=int(options.window), maf_threshold=float(options.maf))
 
 
-    pairs_df = pd.read_parquet(f'{options.name}.cis_qtl_pairs.{options.chrom}.parquet')
+    #pairs_df = pd.read_parquet(f'{options.name}.cis_qtl_pairs.{options.chrom}.parquet')
+    suffix='.parquet'
+    directory=os.path.dirname(options.name)
+    matching_files= [f for f in os.listdir(directory) if f.endswith(suffix)]
+    print(matching_files)
+
+    for f in matching_files:
+        if f==matching_files[0]:
+            pairs_df = pd.read_parquet(f'{directory}/{f}')
+        else:
+            tmp=pd.read_parquet(f'{directory}/{f}')
+            pairs_df = pd.concat([pairs_df,tmp])
+            
+
 
     # all genes
     # cis_df = cis.map_cis(genotype_df, variant_df, phenotype_df, phenotype_pos_df, covariates_df=covariates_df)
