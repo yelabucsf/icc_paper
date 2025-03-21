@@ -109,6 +109,7 @@ if args.atac != None:
     atac=sc.read_h5ad(args.atac)
     get_tupes_atac = atac.obs[covars][~atac.obs[covars].duplicated()].itertuples
     df_atac = pd.DataFrame(np.nan,index=pd.MultiIndex.from_tuples([i[1:] for i in get_tupes_atac()], names=covars),columns=atac.var_names)
+    df_cellcount = pd.DataFrame(columns=list(set(atac.obs[covars[1]])),index=list(set(atac.obs[covars[0]])))
     print('ATAC matrix set up complete')
 
     for bc, indv, cluster in list(get_tupes_atac()):
@@ -118,6 +119,7 @@ if args.atac != None:
         num_cells_atac = view_atac.shape[0]
         arr_atac = view_atac.X.sum(0).A.flatten()
         df_atac.loc[(indv, cluster)] = arr_atac
+        df_cellcount.loc[(indv,cluster)]=num_cells_atac
         #df_atac.loc[(indv, cluster)] = np.log1p(arr_atac/num_cells_atac)
     print("done creating ATAC pseudobulk matrix")
     print(df_atac)
@@ -127,10 +129,13 @@ if args.atac != None:
     gene_counts=(df_atac.groupby(by=[args.rna_cell]).sum(0)).T
     gene_counts.index.name = 'genes'
 
+    df_cellcount=df_cellcount.fillna(0)
+
 
     #save outputs
     donor_counts.to_csv(str(args.pseudobulk_outdir)+"/donor_counts_atac.txt",sep="\t")
     gene_counts.to_csv(str(args.pseudobulk_outdir)+"/gene_counts_atac.txt",sep="\t")
+    df_cellcount.to_csv(str(args.pseudobulk_outdir)+"/donor_cell_counts_atac.txt",sep="\t")
 
     #save outputs
     cell_types = np.unique(df_atac.index.get_level_values(1))
