@@ -17,3 +17,5 @@ s2=[ i.split('-')[1] for i in locs ]
 dict={'gene': peaks, 'chr': chr, 's1':s1,'s2':s2}
 
 df=pd.DataFrame(dict)
+
+df.to_csv('/data/reference/peak_locs_L2_stringent.txt')
