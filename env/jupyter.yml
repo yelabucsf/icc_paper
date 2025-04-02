@@ -1,0 +1,15 @@
+name: jupyter
+channels:
+  - defaults
+dependencies:
+  - jupyterlab
+  - ipykernel
+  - nb_conda
+  - r-irkernel
+  - conda-forge::r-base
+  - conda-forge::r-data.table
+  - conda-forge::r-ggplot2
+  - conda-forge::r-ggrepel
+  - conda-forge::r-optparse
+ - pip
+

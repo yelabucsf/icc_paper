@@ -1,0 +1,17 @@
+name: archr
+channels:
+  - defaults
+dependencies:
+  - r-archr
+  - r-biocmanager
+  - bioconductor-bsgenome.hsapiens.ucsc.hg38
+  - r-optparse
+  - r-seurat
+  - r-harmony
+  - macs2
+  - bioconda::bioconductor-edger
+  - conda-forge::nb_conda_kernels
+  - r-irkernel
+  - r-devtools
+ - pip
+
