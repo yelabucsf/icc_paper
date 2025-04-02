@@ -1,0 +1,8 @@
+name: genetics
+channels:
+  - defaults
+dependencies:
+  - bioconda::bedtools
+  - bioconda::plink2
+ - pip
+

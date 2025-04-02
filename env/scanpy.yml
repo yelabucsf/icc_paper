@@ -1,0 +1,13 @@
+name: scanpy
+channels:
+  - defaults
+dependencies:
+  - leidenalg
+  - python-igraph
+  - scanpy
+  - shapely
+  - scikit-bio
+  - conda-forge::ipykernel
+  - conda-forge::nb_conda_kernels
+ - pip
+

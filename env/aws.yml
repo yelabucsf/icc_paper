@@ -1,0 +1,8 @@
+name: aws
+channels:
+  - defaults
+dependencies:
+  - awscli
+  - git
+ - pip
+
