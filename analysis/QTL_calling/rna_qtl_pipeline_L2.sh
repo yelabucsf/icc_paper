@@ -10,8 +10,10 @@ out_dir="/data/processed/QTL_calling/rna/"
 genos_dir="/data/processed/genotypes/plink/"
 geno_pref='combined_cleaned'
 cell_annot_col='L2_manual'
-pref='L3'
+pref='L2'
 #chr=5
+
+mkdir -p ${out_dir}/${cell_annot_col}
 
 conda activate tensorQTL
 ## Generate Expression PCS
@@ -38,9 +40,13 @@ for cell_type in `ls -1 ${data_dir}/${cell_annot_col}/*.exp | cut -d / -f7 | cut
 
 
 ## run tensor QTL
-conda activate tensorQTL
-for cell_type in `ls -1 ${data_dir}/${cell_annot_col}/*.exp | cut -d / -f7 | cut -d . -f1`; do python run_tensorqtl.py -g ${genos_dir}/${geno_pref} -p ${out_dir}/${cell_annot_col}/${cell_type}/pheno/${cell_type}_phenos_tensorqtl_sorted.bed -c ${out_dir}/${cell_annot_col}/${cell_type}/cov/${cell_type}_${cell_type}.covs -n ${out_dir}/${cell_annot_col}/${cell_type}/${cell_type} ; done
+#conda activate tensorQTL
+#for cell_type in `ls -1 ${data_dir}/${cell_annot_col}/*.exp | cut -d / -f7 | cut -d . -f1`; do python run_tensorqtl.py -g ${genos_dir}/${geno_pref} -p ${out_dir}/${cell_annot_col}/${cell_type}/pheno/${cell_type}_phenos_tensorqtl_sorted.bed -c ${out_dir}/${cell_annot_col}/${cell_type}/cov/${cell_type}_${cell_type}.covs -n ${out_dir}/${cell_annot_col}/${cell_type}/${cell_type} ; done
 
+
+## run tensor QTL per chr
+conda activate tensorQTL
+for cell_type in `ls -1 ${data_dir}/${cell_annot_col}/*.exp | cut -d / -f7 | cut -d . -f1`; do echo $cell_type;  for chr in `ls /data/processed/genotypes/plink/ | grep chr | cut -d _ -f1| uniq | sed "s/chr//g" | sort -n` ; do echo $chr ; python run_tensorqtl.py -g ${genos_dir}/chr${chr}_cleaned -p ${out_dir}/${cell_annot_col}/${cell_type}/pheno/${cell_type}_phenos_tensorqtl_sorted.bed -c ${out_dir}/${cell_annot_col}/${cell_type}/cov/${cell_type}_${cell_type}.covs -n ${out_dir}/${cell_annot_col}/${cell_type}/${cell_type} --chrom ${chr} ; done ; done
 
 ### run tensor QTL
 #conda activate tensorQTL

@@ -88,7 +88,7 @@ print(covariates_df)
 
 #genotypes can be large and this step can take a while
 # PLINK reader for genotypes
-pgr = pgen.PgenReader(options.geno)
+pgr = pgen.PgenReader(options.geno,select_samples=phenotype_df.columns)
 genotype_df = pgr.load_genotypes()
 variant_df = pgr.variant_df
 
@@ -141,7 +141,7 @@ if(options.chrom == 'all'):
     # write outputs
     print('save outputs')
     pairs_df.to_csv(f'{options.name}.cis_qtl_snp.{options.chrom}.txt', sep='\t', index=False)
-    cis_df.to_csv(f'{options.name}.cis_qtl_egene.{options.chrom}.txt', sep='\t', index=False) 
+    cis_df.to_csv(f'{options.name}.cis_qtl_egene.{options.chrom}.txt', sep='\t', index=True) 
 else:
     print('running chromosome '+str(options.chrom))
     print(str('gtype dims: '+str(genotype_df.shape)))
