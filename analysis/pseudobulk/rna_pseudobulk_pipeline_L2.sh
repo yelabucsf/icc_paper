@@ -1,7 +1,7 @@
 
 
 cell_annot_col='L2_manual'
-h5_file='/data/march2025/MultiVI_posttraining_RNA_Celltypist_VaryingClusteringResolution_manual_annots.h5ad'
+h5_file='/data/processed/march2025/MultiVI_posttraining_RNA_Celltypist_VaryingClusteringResolution_manual_annots.h5ad'
 outdir='/data/processed/pseudobulk/rna/'
 donor_col='best_sample'
 cell_num=50
