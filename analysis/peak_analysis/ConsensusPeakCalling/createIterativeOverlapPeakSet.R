@@ -334,7 +334,6 @@ metadata_df <- read.table(metadata, header = TRUE, row.names = 1, sep = "\t", st
 print('make df')
 df <- data.frame(samples = rownames(metadata_df), groups = metadata_df$Group,
                  summits = paste0(macs2_dir,rownames(metadata_df),end))
-print(head(df))
 print('read blacklist')
 blacklist <- import.bed(blacklist_bed)
 
