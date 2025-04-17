@@ -3,19 +3,19 @@
 # takes in peak h5ad file
 # We are using stringent peaks from L2 for L1 QTLs since these are almost identical 
 
-cell_annot_col='L1_manual'
 #h5_file='/data/processed/pseudobulk/atac/stringent_L1_peaks/aggregate_phase2_ICC_stringent_L1_peaks_counts_mtx.h5'
 h5_file='/data/processed/pseudobulk/atac/stringent_L2_peaks/aggregate_phase2_ICC_stringent_L2_peaks_counts_mtx_annot.h5'
 outdir='/data/processed/pseudobulk/atac/'
 donor_col='best_sample'
 cell_num=50
+cell_annot_col='L1_manual'
 
 # make pseudobulk counts
 conda activate scanpy
 
 # add metadata to atac h5 file, note that this is hardcoded and should only be run if annotations have not already been added
-python add_meta_atac_h5_L1.py
-python add_meta_atac_h5_L2.py
+##python add_meta_atac_h5_L1.py
+##python add_meta_atac_h5_L2.py
 
 # make basic counts
 mkdir -p ${outdir}/${cell_annot_col}

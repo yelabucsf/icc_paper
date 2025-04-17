@@ -69,9 +69,12 @@ exprMat <- exprMat[,order(all_donors) ]
 
 ##filter for cell type
 sub("_", " ", opt$celltype)
-geneMat=geneMat[c(sub("_", " ", opt$celltype))]
-donorMat=donorMat[c(sub("_", " ", opt$celltype))]
+print(str_count(opt$celltype, '_'))
+geneMat=geneMat[opt$celltype]
+donorMat=donorMat[opt$celltype]
 
+#geneMat=geneMat[c(sub("_", " ", opt$celltype))]
+#donorMat=donorMat[c(sub("_", " ", opt$celltype))]
 
 print("lib")
 print(head(donorMat[,1]))
