@@ -1,6 +1,7 @@
 import argparse
 import os
 from tqdm import tqdm
+import numpy as np
 import pandas as pd
 import pyranges as pr
 from scipy import stats
@@ -20,7 +21,7 @@ def main():
                       action = "store", type=str, required=False,
                       dest = "outfile",
                       help = "outfile") 
-    (options, args) = parser.parse_args()
+    args = parser.parse_args()
     
     peak_bed = pd.read_csv(args.bed, sep="\t", names=["Chromosome", "Start", "End", "Cluster"])
     clusters = peak_bed["Cluster"].unique()
@@ -35,12 +36,13 @@ def main():
         for chr in tqdm(range(1, 23)):
             qtl_df.append(pd.read_parquet(f"{args.qtl_dir}/{cell_type}/{cell_type}.cis_qtl_pairs.{chr}.parquet", 
             columns=["pval_nominal", "chr", "pos"]))
-        qtl_df = pd.concat(qtl_df)
+        qtl_df = pd.concat(qtl_df, ignore_index=True)
         qtl_df.rename(columns={"chr": "Chromosome", "pos": "End"}, inplace=True)
         qtl_df["Start"] = qtl_df["End"] - 1
+        qtl_df.reset_index(inplace=True)
         qtl_df_pr = pr.PyRanges(qtl_df)
         
-        for cluster in clusters:
+        for cluster in tqdm(clusters):
             cluster_pr = pr.PyRanges(peak_bed[peak_bed["Cluster"] == cluster])
             qtl_df[cluster] = False
             overlap_inds = qtl_df_pr.overlap(cluster_pr).df["index"].values

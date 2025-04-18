@@ -5,11 +5,11 @@ outdir="/data_vol/analysis_outputs/peak_clustering"
 file_prefix="L2_permissive_peaks_L2_cell_types"
 
 # cluster
-# for k in 4 8 12 16 20 24 28 32;
-# do
-#     echo $k
-#     python cluster_peaks.py -k $k --method kmeans --atac_tsv $atac_tsv --outdir $outdir --prefix $file_prefix
-# done
+for k in 4 8 12 16 20 24 28 32;
+do
+    echo $k
+    python cluster_peaks.py -k $k --method kmeans --atac_tsv $atac_tsv --outdir $outdir --prefix $file_prefix
+done
 
 # plot
 for method in kmeans NMF;
