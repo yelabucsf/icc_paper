@@ -113,47 +113,12 @@ def main():
     chromhmm_states = pr.PyRanges(chromhmm_states) 
 
     # read in caQTLs
-    if not os.path.exists(f"{args.caqtl_dir}/{args.cell_type}/{args.cell_type}.cis_qtl_pairs.significant_annotated.tsv"):
-        caqtls = []
-        for chr in tqdm(range(1, 23)):
-             variants = read_variants_from_pvar(f"/data_vol/FINAL/Genotypes/Cleaned/chr{chr}_cleaned.pvar")
-            
-             # Read in QTLs and subset to signficant variants
-             tmp_df = pd.read_parquet(f"{args.caqtl_dir}/{args.cell_type}/{args.cell_type}.cis_qtl_pairs.{chr}.parquet")
-             egenes = pd.read_csv(f"{args.caqtl_dir}/{args.cell_type}/{args.cell_type}.cis_qtl_egene.{chr}.txt", sep="\t")
-             egenes = egenes.loc[egenes["qval"] < 0.05]
-             tmp_df = tmp_df.loc[tmp_df["phenotype_id"].isin(egenes["phenotype_id"].values)]
-             tmp_df = tmp_df.merge(egenes[["phenotype_id", "pval_nominal_threshold"]], on="phenotype_id", how="left")
-             tmp_df = tmp_df.loc[tmp_df["pval_nominal"] < tmp_df["pval_nominal_threshold"]]
-             tmp_df.reset_index(inplace=True, drop=True)
-
-             # annotate with position info
-             qtl_variants = tmp_df["variant_id"].values
-             qtl_variants_info = []
-             for variant_id in qtl_variants:
-                  qtl_variants_info.append(astuple(variants[variant_id]))
-             qtl_variants_info = pd.DataFrame(qtl_variants_info, columns=["chr", "pos", "ref", "alt"])
-             tmp_df = pd.concat([tmp_df, qtl_variants_info], axis=1)
-             caqtls.append(tmp_df)
-
-        caqtls = pd.concat(caqtls, ignore_index=True)
-        caqtls.to_csv(f"{args.caqtl_dir}/{args.cell_type}/{args.cell_type}.cis_qtl_pairs.significant_annotated.tsv", sep="\t", index=False)
-    caqtls = pd.read_csv(f"{args.caqtl_dir}/{args.cell_type}/{args.cell_type}.cis_qtl_pairs.significant_annotated.tsv", sep="\t")
+    caqtls = pd.read_csv(f"{args.caqtl_dir}/{args.cell_type}/{args.cell_type}.cis_qtl_snp.all_significant.annot.txt", sep="\t")
 
     # read in eQTLs
-    eqtls = []
-    for chr in tqdm(range(1, 23)):     
-        # Read in QTLs and subset to signficant variants
-        tmp_df = pd.read_parquet(f"{args.eqtl_dir}/{args.cell_type}/{args.cell_type}.cis_qtl_pairs.{chr}.parquet")
-        egenes = pd.read_csv(f"{args.eqtl_dir}/{args.cell_type}/{args.cell_type}.cis_qtl_egene.{chr}.txt", sep="\t")
-        egenes = egenes.loc[egenes["qval"] < 0.05]
-        tmp_df = tmp_df.loc[tmp_df["phenotype_id"].isin(egenes["phenotype_id"].values)]
-        tmp_df = tmp_df.merge(egenes[["phenotype_id", "pval_nominal_threshold"]], on="phenotype_id", how="left")
-        tmp_df = tmp_df.loc[tmp_df["pval_nominal"] < tmp_df["pval_nominal_threshold"]]
-        eqtls.append(tmp_df)
-    eqtls = pd.concat(eqtls, ignore_index=True)
+    eqtls = pd.read_csv(f"{args.eqtl_dir}/{args.cell_type}/{args.cell_type}.cis_qtl_snp.all_significant.annot.txt", sep="\t")
 
-    # add chrromHMM annotations to QTLs
+    # add chromHMM annotations to QTLs
     qtls = {"eQTLs": eqtls, "caQTLs": caqtls}
     for k in qtls.keys():
         qtls[k].rename(columns={"chr": "Chromosome", "pos": "End"}, inplace=True)
