@@ -46,9 +46,8 @@ infile3=$outdir/$tissue".pos_hg19.bed"
 
 script=$codedir/"keep_correct_alleles.R" #restrict to eQTLs that match KGP SNPs with MAF>0.01
 Rscript $script $maffile $bimfile $infile1 $infile2 $infile3
-# echo "python $codedir/keep_correct_alleles.py --maffile $maffile --hg38_snps $bimfile --infile1 $infile1 --infile2 $infile2 --infile3 $infile3"
 
-# #LD clumping==========
+#LD clumping==========
 
 clumpdir=$outdir/"clump"
 mkdir $clumpdir
