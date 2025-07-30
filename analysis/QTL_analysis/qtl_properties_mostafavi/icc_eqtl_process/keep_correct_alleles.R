@@ -45,8 +45,6 @@ dg <- unite(dg,"allele1_hg19", cols, sep=":", na.rm = TRUE, remove = FALSE)
 cols <- c('chr_num','pos_19_num','A2','A1')
 dg <- unite(dg,"allele2_hg19", cols, sep=":", na.rm = TRUE, remove = FALSE)
 
-
-
 dh1=dg[dg$allele1_hg19 %in% d_maf$V1,]
 dh2=dg[dg$allele2_hg19 %in% d_maf$V1,]
 
