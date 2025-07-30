@@ -27,7 +27,7 @@ k="16"
 for method in kmeans NMF;
 do
     echo $method
-    cluster_bed="${outdir}/clustering_results/${method}_${k}_${file_prefix}.bed"
+    cluster_bed="${outdir}/exploratory/${method}_${k}_${file_prefix}.bed"
     outfile="${outdir}/figures/${method}_${k}_${file_prefix}_vertical.png"
     python plot_heatmap.py --cluster_bed $cluster_bed --atac_tsv $atac_tsv --outfile $outfile --orientation vertical
 done
@@ -35,6 +35,6 @@ done
 method="kmeans"
 k="16"
 cluster_order="5,11,13,2,14,12,4,6,3,8,0,10,9,15,7,1"
-cluster_bed="${outdir}/clustering_results/${method}_${k}_${file_prefix}.bed"
-outfile="${outdir}/figures/${method}_${k}_${file_prefix}_vertical_manual_cluster_order.png"
+cluster_bed="${outdir}/exploratory/${method}_${k}_${file_prefix}.bed"
+outfile="${outdir}/figures/${method}_${k}_${file_prefix}_vertical_manual_cluster_order_bwr.png"
 python plot_heatmap.py --cluster_bed $cluster_bed --atac_tsv $atac_tsv --outfile $outfile --orientation vertical --cluster_order $cluster_order
