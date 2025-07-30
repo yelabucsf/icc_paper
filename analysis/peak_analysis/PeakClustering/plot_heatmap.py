@@ -56,25 +56,27 @@ def main():
         cellbypeaks_logcpm = cellbypeaks_logcpm[cell_type_order]
 
     if args.orientation == "horizontal":
-        sns.clustermap(cellbypeaks_logcpm.T, 
+        cg = sns.clustermap(cellbypeaks_logcpm.T, 
                     row_cluster=True if args.cell_type_order is None else False,
                     col_cluster=False, 
                     col_colors=cluster_colors, 
-                    xticklabels=False, cmap="Blues", figsize=(16,12))
+                    xticklabels=False, cmap="bwr",
+                    vmax=2, figsize=(16,12))
     else:
-        sns.clustermap(cellbypeaks_logcpm, 
+        cg = sns.clustermap(cellbypeaks_logcpm, 
                     row_cluster=False, 
                     col_cluster=True if args.cell_type_order is None else False, 
                     row_colors=cluster_colors, 
-                    yticklabels=False, cmap="Blues", figsize=(12,16))
+                    yticklabels=False, cmap="bwr", cbar_pos=(0.99, 0.15, 0.03, 0.6),
+                    vmax=2, figsize=(12,16))
+    cg.ax_col_dendrogram.set_visible(False)
                     
     patches = [mpatches.Patch(color=v, label=k) for k, v in cluster_color_mapping.items()]
     if args.orientation == "horizontal":
         plt.legend(handles=patches, loc=(2,0.1))
-    else:
-        plt.legend(handles=patches, loc="lower left")
+
     plt.tight_layout()
-    plt.savefig(args.outfile, dpi=300)
+    plt.savefig(args.outfile, bbox_inches="tight", dpi=300)
 
 
 if __name__ == '__main__':
