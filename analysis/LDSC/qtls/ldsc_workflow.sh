@@ -29,6 +29,9 @@ for level in "${!cell_types_dict[@]}"; do
         combined_bed_files_cmd+=" ${QTL_dir}/${level}/${cell_type}/${cell_type}.significant_genes_slop_100kb.bed"
     done
     ${combined_bed_files_cmd}
+
+    python qtls/create_variant_beds_all_cell_types.py -q $QTL_dir --level $level
+    python qtls/create_variant_beds_modality_specific.py --level $level
 done
 
 # mamba activate py27
@@ -56,6 +59,17 @@ for level in "${!cell_types_dict[@]}"; do
     mkdir -p ${ldsc_dir}/annots/qtls/rna/${level}/all_cell_types
     bed_file="${QTL_dir}/${level}/all_cell_types_significant_genes_slop_100kb"
     ./make_annots.sh ${ldsc_dir} ${bed_file} qtls/rna/${level}/all_cell_types/all_cell_types_significant_genes_slop_100kb
+
+    for prefix in "significant_qtls_pooled" "significant_qtl_in_one_cell_type" "significant_qtl_in_multiple_cell_types"; do
+        bed_file="${QTL_dir}/${level}/all_cell_types.${prefix}"
+        ./make_annots.sh ${ldsc_dir} ${bed_file} qtls/rna/${level}/all_cell_types/${prefix}
+    done
+
+    mkdir -p ${ldsc_dir}/annots/qtls/${level}/all_cell_types
+    for prefix in "significant_qtls_pooled_rna_and_atac" "significant_qtls_pooled_rna_only" "significant_qtls_pooled_atac_only"; do
+        bed_file="${QTL_dir}/${level}/all_cell_types.${prefix}"
+        ./make_annots.sh ${ldsc_dir} ${bed_file} qtls/${level}/all_cell_types/${prefix}
+    done
 done
 
 ###
@@ -79,6 +93,7 @@ for level in "${!cell_types_dict[@]}"; do
         combined_bed_files_cmd+=" ${QTL_dir}/${level}/${cell_type}/${cell_type}.significant_peaks_1000bp.bed"
     done
     ${combined_bed_files_cmd}
+    python qtls/create_variant_beds_all_cell_types.py -q $QTL_dir --level $level
 done
 
 # mamba activate py27
@@ -106,6 +121,11 @@ for level in "${!cell_types_dict[@]}"; do
     mkdir -p ${ldsc_dir}/annots/qtls/atac/${level}/all_cell_types
     bed_file="${QTL_dir}/${level}/all_cell_types_significant_peaks_1000bp"
     ./make_annots.sh ${ldsc_dir} ${bed_file} qtls/atac/${level}/all_cell_types/all_cell_types_significant_peaks_1000bp
+
+    for prefix in "significant_qtls_pooled" "significant_qtl_in_one_cell_type" "significant_qtl_in_multiple_cell_types"; do
+        bed_file="${QTL_dir}/${level}/all_cell_types.${prefix}"
+        ./make_annots.sh ${ldsc_dir} ${bed_file} qtls/atac/${level}/all_cell_types/${prefix}
+    done
 done
 
 ###
@@ -130,6 +150,18 @@ for modality in rna atac; do
         done
         ./run_ldsc.sh ${ldsc_dir} ${ldsc_dir}/annots/qtls/${modality}/${level}/all_cell_types/all_cell_types_significant_genes_slop_100kb. ${modality}_all_cell_types.significant_genes_slop_100kb
         ./run_ldsc.sh ${ldsc_dir} ${ldsc_dir}/annots/qtls/${modality}/${level}/all_cell_types/all_cell_types_significant_peaks_1000bp. ${modality}_all_cell_types.significant_peaks_1000bp
+
+        for prefix in "significant_qtls_pooled" "significant_qtl_in_one_cell_type" "significant_qtl_in_multiple_cell_types" "significant_qtls_pooled_rna_and_atac" "significant_qtls_pooled_rna_only" "significant_qtls_pooled_atac_only"; do
+            ./run_ldsc.sh ${ldsc_dir} ${ldsc_dir}/annots/qtls/${modality}/${level}/all_cell_types/${prefix}. ${modality}_${level}_all_cell_types.${prefix}
+        done
     done    
 done
+
+for level in "${!cell_types_dict[@]}"; do
+    echo "Processing level: $level" 
+
+    for prefix in "significant_qtls_pooled_rna_and_atac" "significant_qtls_pooled_rna_only" "significant_qtls_pooled_atac_only"; do
+        ./run_ldsc.sh ${ldsc_dir} ${ldsc_dir}/annots/qtls/${level}/all_cell_types/${prefix}. ${level}_all_cell_types.${prefix}
+    done
+done 
 
