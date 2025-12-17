@@ -46,7 +46,7 @@ def main():
         with open(f"{args.outdir}/{args.method}_{args.k}_{args.file_prefix}_WSS_error.json", 'w') as f:
             json.dump({"Method": args.method,
                        "K": args.k,
-                       "Reconstructioin error": nmf.reconstruction_err_}, f)
+                       "Reconstruction error": nmf.reconstruction_err_}, f)
 
     # save results to bed file
     bed_df = pd.DataFrame([re.split("[:-]", i) for i in cellbypeaks_logcpm.index],
